@@ -164,38 +164,7 @@ struct Board
 
     int eval(int player)
     {
-        // my_player = get_next_player(my_player);
         int state_value = 0;
-        // for (int i = 0; i < SIZE; i++)
-        // {
-        //     if (my_board[i][0] == my_player)
-        //         state_value += 4;
-        //     else if (my_board[i][0] == get_next_player(my_player))
-        //         state_value -= 3;
-        //     if (my_board[i][7] == my_player)
-        //         state_value += 4;
-        //     else if (my_board[i][7] == get_next_player(my_player))
-        //         state_value -= 3;
-        //     if (my_board[0][i] == my_player)
-        //         state_value += 4;
-        //     else if (my_board[0][i] == get_next_player(my_player))
-        //         state_value -= 3;
-        //     if (my_board[7][i] == my_player)
-        //         state_value += 4;
-        //     else if (my_board[7][i] == get_next_player(my_player))
-        //         state_value -= 3;
-        // }
-        // for (int i = 1; i < SIZE - 1; i++)
-        // {
-        //     if (my_board[1][i] == my_player)
-        //         state_value -= 3;
-        //     if (my_board[6][i] == my_player)
-        //         state_value -= 3;
-        //     if (my_board[i][1] == my_player)
-        //         state_value -= 3;
-        //     if (my_board[i][6] == my_player)
-        //         state_value -= 3;
-        // }
         
         for(int i = 0; i < SIZE; i++)
         {
@@ -464,11 +433,10 @@ struct Board
                                     }
                                     else
                                     {
-                                        state_value -= 15;
+                                        state_value += 5;
                                     }
                                 }
                             }
-                            // state_value += 0;
                         }
                     }
                     if(j + 3 < SIZE)
@@ -494,11 +462,10 @@ struct Board
                                     }
                                     else 
                                     {
-                                        state_value -= 15;
+                                        state_value += 5;
                                     }
                                 }
                             }
-                            // state_value += 0;
                         }
                     }
                     if(j + 3 < SIZE && i + 3 < SIZE)
@@ -524,11 +491,10 @@ struct Board
                                     }
                                     else
                                     {
-                                        state_value -= 15;
+                                        state_value += 5;
                                     }
                                 }
                             }
-                            // state_value += 0;
                         }
                     }
                     if(j + 3 < SIZE && i - 3 < SIZE)
@@ -554,11 +520,10 @@ struct Board
                                     }
                                     else
                                     {
-                                        state_value -= 15;
+                                        state_value += 5;
                                     }
                                 }
                             }
-                            // state_value += 0;
                         }
                     }
 
@@ -813,22 +778,6 @@ void write_valid_spot(ofstream &fout, int x, int y)
     fout.flush();
 }
 
-// bd = board
-
-
-// void giveAllValue(Board bd) 
-// {
-//     for(int i = 0; i < SIZE; i++)
-//     {
-//         for(int j = 0; j < SIZE; j++)
-//         {
-//             if(bd.get_disc(Point(i, j)) == EMPTY)
-//             {
-//                 setValue(i, j);
-//             }
-//         }
-//     }
-// }
 
 int rec = 0;
 
