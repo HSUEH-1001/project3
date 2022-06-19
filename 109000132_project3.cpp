@@ -185,16 +185,21 @@ struct Board
                         }
                         if(is_two)
                         {
-                            if(is_spot_on_board(Point(i-1, j)) && is_spot_on_board(Point(i-2, j)) && is_spot_on_board(Point(i + 2, j)))
+                            // 判斷i-1、i-2、i+2這三個位置是不是在合理的位置
+                            if(is_spot_on_board(Point(i-1, j)) && is_spot_on_board(Point(i-2, j)) && is_spot_on_board(Point(i + 2, j))) 
                             {
+                                // 判斷i-1的位置為空的且i-2的位置是自己的棋
                                 if((get_disc(Point(i-1, j)) == EMPTY && get_disc(Point(i-2, j)) == player))
                                 {
+                                    // 同時i+2的地方若是空的，即會有機會讓下下步棋形成活四，因此讓state value加多一點
                                     if(get_disc(Point(i+2, j)) == EMPTY)
                                         state_value += 15;
+                                    // 若i+2的地方不是空的，還是有機會形成四顆棋連線，因此也讓state value多加一點點
                                     else 
                                         state_value += 5;
                                 }
                             }
+                            // 同理，這裡為判斷另一個方向是否有機會形成活四的狀態
                             else if(is_spot_on_board(Point(i+2, j)) && is_spot_on_board(Point(i+3, j)) && is_spot_on_board(Point(i-1, j)))
                             {
                                 if(get_disc(Point(i+2, j)) == EMPTY && get_disc(Point(i+3, j)) == player)
@@ -330,8 +335,10 @@ struct Board
                         }
                         if(is_three)
                         {
+                            // 判斷i-1、i+3的位置是否在合理的地方
                             if(is_spot_on_board(Point(i - 1, j)) && is_spot_on_board(Point(i + 3, j)))
                             {
+                                // 若兩個位置皆為空的，即會形成活三的情形，因此讓state value多加5
                                 if(get_disc(Point(i - 1, j)) == EMPTY && get_disc(Point(i + 3, j)) == EMPTY)
                                 {
                                     state_value += 5;
@@ -423,14 +430,17 @@ struct Board
                         }
                         if(is_four)
                         {
+                            // 判斷i-1、i+4的位置是否為合理的位置
                             if(is_spot_on_board(Point(i - 1, j)) && is_spot_on_board(Point(i + 4, j)))
                             {
                                 if(get_disc(Point(i - 1, j)) == EMPTY || get_disc(Point(i + 4, j)) == EMPTY)
                                 {
+                                    // 若兩邊的位置皆為空，即會形成活四的情形，因此讓state value多加20
                                     if(get_disc(Point(i - 1, j)) == EMPTY && get_disc(Point(i + 4, j)) == EMPTY)
                                     {
                                         state_value += 20;
                                     }
+                                    // 不會形成活四的話表示一定會被阻擋，有點多浪費一步的感覺，因此state value只加5
                                     else
                                     {
                                         state_value += 5;
@@ -547,6 +557,7 @@ struct Board
                         {
                             if(is_spot_on_board(Point(i - 1, j)) && is_spot_on_board(Point(i + 3, j)))
                             {
+                                // 即為活三的情形，若不防守即會形成活四，而活四即無解，因此要多減一些讓此情形不要發生
                                 if(get_disc(Point(i - 1, j)) == EMPTY && get_disc(Point(i + 3, j)) == EMPTY)
                                 {
                                     state_value -= 45;
@@ -644,11 +655,12 @@ struct Board
                                 {
                                     if(get_disc(Point(i - 1, j)) == EMPTY && get_disc(Point(i + 4, j)) == EMPTY)
                                     {
-                                        state_value -= 30;
+                                        state_value -= 20;
                                     }
+                                    //
                                     else
                                     {
-                                        state_value -= 20;
+                                        state_value -= 30;
                                     }
                                 }
                             }
@@ -674,11 +686,11 @@ struct Board
                                 {
                                     if(get_disc(Point(i, j - 1)) == EMPTY && get_disc(Point(i, j + 4)) == EMPTY)
                                     {
-                                        state_value -= 30;
+                                        state_value -= 20;
                                     }
                                     else
                                     {
-                                        state_value -= 20;
+                                        state_value -= 30;
                                     }
                                 }
                             }
@@ -704,11 +716,11 @@ struct Board
                                 {
                                     if(get_disc(Point(i - 1, j - 1)) == EMPTY && get_disc(Point(i + 4, j + 4)) == EMPTY)
                                     {
-                                        state_value -= 30;
+                                        state_value -= 20;
                                     }
                                     else
                                     {
-                                        state_value -= 20;
+                                        state_value -= 30;
                                     }
                                 }
                             }
@@ -734,11 +746,11 @@ struct Board
                                 {
                                     if(get_disc(Point(i + 4, j - 1)) == EMPTY && get_disc(Point(i - 1, j + 4)) == EMPTY)
                                     {
-                                        state_value -= 30;
+                                        state_value -= 20;
                                     }
                                     else
                                     {
-                                        state_value -= 20;
+                                        state_value -= 30;
                                     }
                                 }
                             }
@@ -801,7 +813,7 @@ int recur(ofstream &fout, Board bd, int depth, int alpha, int beta)
         int best = MIN;                 
         for (int i = 0; i < SIZE; i++)
         {
-            for(int j = 0; j < SIZE; j++) {
+            for(int j = 0; j < SIZE; j++) {                 // 跑完整個棋盤去做以下的判斷
                 if(bd.get_disc(Point(i, j)) != EMPTY)       // 若在這個地方不是空的即繼續以下的判斷
                     continue;
                 bool near = false;
@@ -822,7 +834,7 @@ int recur(ofstream &fout, Board bd, int depth, int alpha, int beta)
                     tmp.my_player = tmp.get_next_player(tmp.my_player);
                 else
                     continue;
-                int val = recur(fout, tmp, depth + 1, alpha, beta);
+                int val = recur(fout, tmp, depth + 1, alpha, beta); // depth + 1後繼續遞迴
 
                 if (best < val)
                 {
@@ -841,7 +853,7 @@ int recur(ofstream &fout, Board bd, int depth, int alpha, int beta)
                     break;
                 }
             }
-            if(prune)
+            if(prune)               // prune表示已經在上一層的for迴圈break過，因此若prune是true，即break
                 break;
         }
         if (depth != 0)
