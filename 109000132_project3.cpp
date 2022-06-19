@@ -549,7 +549,7 @@ struct Board
                             {
                                 if(get_disc(Point(i - 1, j)) == EMPTY && get_disc(Point(i + 3, j)) == EMPTY)
                                 {
-                                    state_value -= 38;
+                                    state_value -= 45;
                                 }
                             }
                             state_value -= 12;
@@ -572,7 +572,7 @@ struct Board
                             {
                                 if(get_disc(Point(i, j - 1)) == EMPTY && get_disc(Point(i, j + 3)) == EMPTY)
                                 {
-                                    state_value -= 38;
+                                    state_value -= 45;
                                 }
                             }
                             state_value -= 12;
@@ -595,7 +595,7 @@ struct Board
                             {
                                 if(get_disc(Point(i - 1, j - 1)) == EMPTY && get_disc(Point(i + 3, j + 3)) == EMPTY)
                                 {
-                                    state_value -= 38;
+                                    state_value -= 45;
                                 }
                             }
                             state_value -= 12;
@@ -618,7 +618,7 @@ struct Board
                             {
                                 if(get_disc(Point(i + 3, j - 1)) == EMPTY && get_disc(Point(i - 1, j + 3)) == EMPTY)
                                 {
-                                    state_value -= 38;
+                                    state_value -= 45;
                                 }
                             }
                             state_value -= 12;
@@ -779,47 +779,42 @@ void write_valid_spot(ofstream &fout, int x, int y)
 }
 
 
-int rec = 0;
 
 int recur(ofstream &fout, Board bd, int depth, int alpha, int beta)
 {
-    if(bd.checkwin(board.my_player))
+    if(bd.checkwin(board.my_player))    // 若自己下一步就要贏了即return最大值 
         return MAX - 1;
     else if(bd.checkwin(board.get_next_player(board.my_player)))
-        return MIN + 1;
-
-    //giveAllValue(bd);
-
-    rec++;
+        return MIN + 1;                 // 若是對方下一步就要贏了即return最小值
 
 
-    if (depth >= 3)
+    if (depth >= 3)                     // 設定當遞迴跑到第三層
     {
-        int k = bd.eval(player);
+        int k = bd.eval(player);        // 呼叫eval計算當時的state_value
         return k;
     }
 
     bool prune = false;
 
-    if (bd.my_player == player)
+    if (bd.my_player == player)        
     {
-        int best = MIN;
+        int best = MIN;                 
         for (int i = 0; i < SIZE; i++)
         {
             for(int j = 0; j < SIZE; j++) {
-                if(bd.get_disc(Point(i, j)) != EMPTY)
+                if(bd.get_disc(Point(i, j)) != EMPTY)       // 若在這個地方不是空的即繼續以下的判斷
                     continue;
                 bool near = false;
-                for(Point dir : directions){
-                    Point p = Point(i, j) + dir;
+                for(Point dir : directions){                
+                    Point p = Point(i, j) + dir;            
                     if(!bd.is_spot_on_board(p))
                         continue;
-                    if(bd.get_disc(p) != EMPTY){
-                        near = true;
+                    if(bd.get_disc(p) != EMPTY){            // 判斷這個點的各個方向是否有旗子
+                        near = true;                        // 有的話就把near設為true
                         break;
                     }
                 }
-                if(!near)
+                if(!near)                                   // 若near不是true我就不在這裡下棋
                     continue;
                 Board tmp = bd;
                 Point p(i, j);
@@ -834,10 +829,6 @@ int recur(ofstream &fout, Board bd, int depth, int alpha, int beta)
                     if (depth == 0)
                     {
                         write_valid_spot(fout, p.x, p.y);
-                        //fout << rec << endl;
-                        
-                        //fout << "val: " << val << endl;
-                        rec = 0;
                     }
                     best = val;
                 }
